@@ -18,7 +18,7 @@ public abstract class Runner {
 		this.directoryPath = directoryPath;
 	}
 
-	public List<String> run(List<TestCase> testCases) throws IOException {
+	public List<String> run(List<TestCase> testCases) {
 		List<String> results = new ArrayList<>();
 
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
@@ -30,19 +30,24 @@ public abstract class Runner {
 		BufferedReader stdOut;
 		BufferedReader stdErr;
 
-		for(int i = 0; i < testCases.size(); ++i) {
-			process = processBuilder.start();
+		try {
+			for (int i = 0; i < testCases.size(); ++i) {
+				process = processBuilder.start();
 
-			stdIn = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-			stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+				stdIn = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+				stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+				stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
-			stdIn.write(testCases.get(i).getParams());
-			stdIn.newLine();
-			stdIn.flush();
+				stdIn.write(testCases.get(i).getParams());
+				stdIn.newLine();
+				stdIn.flush();
 
-			results.add(Optional.of(StringUtils.inputStreamToString(stdOut)).orElse(StringUtils.inputStreamToString(stdErr)));
+				results.add(Optional.of(StringUtils.inputStreamToString(stdOut)).orElse(StringUtils.inputStreamToString(stdErr)));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+
 
 		return results;
 	}

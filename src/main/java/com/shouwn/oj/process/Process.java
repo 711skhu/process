@@ -1,9 +1,8 @@
 package com.shouwn.oj.process;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.shouwn.oj.compile.Complier;
+import com.shouwn.oj.compile.Compiler;
 import com.shouwn.oj.model.entity.problem.TestCase;
 import com.shouwn.oj.model.request.process.ProcessRequest;
 import com.shouwn.oj.run.Runner;
@@ -14,7 +13,7 @@ public abstract class Process {
 	protected String language;
 	protected List<TestCase> testCases;
 	protected long pk;
-	protected Complier complier;
+	protected Compiler compiler;
 	protected Runner runner;
 	protected SourceFile sourceFile;
 
@@ -26,7 +25,11 @@ public abstract class Process {
 	}
 
 	public List<String> run() {
-		List<String> result = new ArrayList<>();
+		List<String> result;
+		sourceFile.saveSourceFile();
+		compiler.compile();
+		result = runner.run(testCases);
+		sourceFile.deleteFolder();
 		return result;
 	}
 }
