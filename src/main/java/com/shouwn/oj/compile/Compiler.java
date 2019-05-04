@@ -15,16 +15,21 @@ public abstract class Compiler {
 		this.directoryPath = directoryPath;
 	}
 
-	public void compile() throws IOException {
+	public void compile() {
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
 		processBuilder.directory(new File(directoryPath));
 
-		Process process = processBuilder.start();
+		try {
+			Process process = processBuilder.start();
 
-		BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
-		if(stdErr.readLine() != null) {
-			//throw new Exception(); //파일이 존재하지 않을 때 발생하는 에러
+			if (stdErr.readLine() != null) {
+				//throw new Exception(); //파일이 존재하지 않을 때 발생하는 에러
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+
 	}
 }

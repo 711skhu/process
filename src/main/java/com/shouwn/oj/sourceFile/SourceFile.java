@@ -9,9 +9,9 @@ import lombok.Getter;
 
 @Getter
 public abstract class SourceFile {
-	protected String packageName;
-	protected String className;
-	public String directoryPath;
+	private String packageName;
+	private String className;
+	private String directoryPath;
 	private String sourceCode;
 	private String sourceFileExtension;
 
