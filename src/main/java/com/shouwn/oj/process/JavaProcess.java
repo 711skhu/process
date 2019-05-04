@@ -11,6 +11,6 @@ public class JavaProcess extends Process {
 		super(processRequest);
 		complier = new JavaCompiler();
 		runner = new JavaRunner();
-		sourceFile = new JavaSourceFile(sourceCode, pk);
+		sourceFile = new JavaSourceFile(pk, sourceCode);
 	}
 }
