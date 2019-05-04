@@ -10,7 +10,7 @@ public class JavaProcess extends Process {
 	public JavaProcess(ProcessRequest processRequest) {
 		super(processRequest);
 		sourceFile = new JavaSourceFile(pk, sourceCode);
-		complier = new JavaCompiler(sourceFile.getClassName(), sourceFile.getDirectoryPath());
+		compiler = new JavaCompiler(sourceFile.getClassName(), sourceFile.getDirectoryPath());
 		runner = new JavaRunner(sourceFile.getPackageName(), sourceFile.getClassName(), sourceFile.getDirectoryPath());
 	}
 }

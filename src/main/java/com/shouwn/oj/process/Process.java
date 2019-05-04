@@ -13,6 +13,7 @@ public abstract class Process {
 	protected String language;
 	protected List<TestCase> testCases;
 	protected long pk;
+
 	protected Compiler compiler;
 	protected Runner runner;
 	protected SourceFile sourceFile;
