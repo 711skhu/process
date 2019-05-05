@@ -1,4 +1,4 @@
-package com.shouwn.oj.process;
+package com.shouwn.oj.machine;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import com.shouwn.oj.model.request.process.ProcessRequest;
 import com.shouwn.oj.run.Runner;
 import com.shouwn.oj.sourceFile.SourceFile;
 
-public abstract class Process {
+public abstract class ProcessMachine {
 	protected String sourceCode;
 	protected List<TestCase> testCases;
 	protected long pk;
@@ -17,7 +17,7 @@ public abstract class Process {
 	protected Runner runner;
 	protected SourceFile sourceFile;
 
-	public Process(ProcessRequest processRequest) {
+	public ProcessMachine(ProcessRequest processRequest) {
 		this.sourceCode = processRequest.getSourceCode();
 		this.testCases = processRequest.getTestCases();
 		this.pk = processRequest.getPk();
