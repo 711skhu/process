@@ -1,4 +1,4 @@
-package com.shouwn.oj.run;
+package com.shouwn.oj.factory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,9 @@ import com.shouwn.oj.model.entity.problem.Course;
 import com.shouwn.oj.model.entity.problem.Problem;
 import com.shouwn.oj.model.entity.problem.ProblemDetail;
 import com.shouwn.oj.model.entity.problem.TestCase;
+import com.shouwn.oj.model.request.process.ProcessRequest;
+import com.shouwn.oj.process.JavaProcess;
+import com.shouwn.oj.process.Process;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +22,7 @@ import static com.shouwn.oj.model.enums.ProblemType.HOMEWORK;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class JavaRunnerTest {
+public class ProcessFactoryTest {
 
 	private Admin professor;
 	private Course newCourse;
@@ -69,44 +72,15 @@ public class JavaRunnerTest {
 	}
 
 	@Test
-	public void runnerCommandTest() {
-		Runner runnerWithPackageName = new JavaRunner("test.", "Test", "T:\\test");
-		Runner runnerWithoutPackageName = new JavaRunner("", "Test", "T:\\test");
+	public void constructorTest() {
+		ProcessRequest processRequest = new ProcessRequest();
+		processRequest.setSourceCode("public Main{}");
+		processRequest.setLanguage("java");
+		processRequest.setPk(1);
+		processRequest.setTestCases(testCases);
 
-		StringBuilder sb = new StringBuilder();
+		Process process = new ProcessFactory(processRequest).getProcess();
 
-		for (String s : runnerWithPackageName.getCommand()) {
-			sb.append(s);
-			sb.append(" ");
-		}
-
-		Assertions.assertEquals("cmd.exe /c java test.Test ", sb.toString());
-
-		sb = new StringBuilder();
-
-		for (String s : runnerWithoutPackageName.getCommand()) {
-			sb.append(s);
-			sb.append(" ");
-		}
-
-		Assertions.assertEquals("cmd.exe /c java Test ", sb.toString());
-	}
-
-	@Test
-	public void runnerRunSuccess() {
-		Runner runner = new JavaRunner("", "Test", "C:\\test");
-
-		List<String> results = runner.run(testCases);
-
-		Assertions.assertEquals("1", results.get(0));
-	}
-
-	@Test
-	public void runnerRunFailure() {
-		Runner runner = new JavaRunner("", "TestFailure", "C:\\test");
-
-		List<String> results = runner.run(testCases);
-
-		Assertions.assertEquals("오류: 기본 클래스 TestFailure을(를) 찾거나 로드할 수 없습니다.", results.get(0));
+		Assertions.assertEquals(true, process instanceof JavaProcess);
 	}
 }
