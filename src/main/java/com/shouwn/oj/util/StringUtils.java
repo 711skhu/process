@@ -11,9 +11,10 @@ public class StringUtils {
 		String line;
 		while ((line = bufferedReader.readLine()) != null) {
 			sb.append(line);
-			sb.append("\n");
 		}
 
-		return sb.toString();
+		String string = sb.toString();
+
+		return string.length() == 0 ? null : string;
 	}
 }

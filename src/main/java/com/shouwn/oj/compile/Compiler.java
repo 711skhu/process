@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import lombok.Getter;
+
+@Getter
 public abstract class Compiler {
 
 	private String[] command;
@@ -22,7 +25,7 @@ public abstract class Compiler {
 		try {
 			Process process = processBuilder.start();
 
-			BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream(), "EUC-KR"));
 
 			if (stdErr.readLine() != null) {
 				//throw new Exception(); //파일이 존재하지 않을 때 발생하는 에러

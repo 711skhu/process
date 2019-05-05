@@ -10,7 +10,6 @@ import com.shouwn.oj.sourceFile.SourceFile;
 
 public abstract class Process {
 	protected String sourceCode;
-	protected String language;
 	protected List<TestCase> testCases;
 	protected long pk;
 
@@ -20,8 +19,7 @@ public abstract class Process {
 
 	public Process(ProcessRequest processRequest) {
 		this.sourceCode = processRequest.getSourceCode();
-		this.language = processRequest.getLanguage();
-		this.testCases = processRequest.getTestcases();
+		this.testCases = processRequest.getTestCases();
 		this.pk = processRequest.getPk();
 	}
 

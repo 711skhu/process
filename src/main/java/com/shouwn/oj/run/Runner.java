@@ -7,11 +7,13 @@ import java.util.Optional;
 
 import com.shouwn.oj.model.entity.problem.TestCase;
 import com.shouwn.oj.util.StringUtils;
+import lombok.Getter;
 
+@Getter
 public abstract class Runner {
 
-	protected String[] command;
-	protected String directoryPath;
+	private String[] command;
+	private String directoryPath;
 
 	public Runner(String[] command, String directoryPath) {
 		this.command = command;
@@ -35,14 +37,14 @@ public abstract class Runner {
 				process = processBuilder.start();
 
 				stdIn = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-				stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-				stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+				stdOut = new BufferedReader(new InputStreamReader(process.getInputStream(), "EUC-KR"));
+				stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream(), "EUC-KR"));
 
 				stdIn.write(testCases.get(i).getParams());
 				stdIn.newLine();
 				stdIn.flush();
 
-				results.add(Optional.of(StringUtils.inputStreamToString(stdOut)).orElse(StringUtils.inputStreamToString(stdErr)));
+				results.add(Optional.ofNullable(StringUtils.inputStreamToString(stdOut)).orElse(StringUtils.inputStreamToString(stdErr)));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

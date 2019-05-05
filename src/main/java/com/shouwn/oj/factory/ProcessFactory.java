@@ -7,14 +7,17 @@ import lombok.Getter;
 
 @Getter
 public class ProcessFactory {
+
 	private Process process;
 
-	public ProcessFactory(String lang, ProcessRequest processRequest) {
-		switch (lang){
-			case "java" :
+	public ProcessFactory(ProcessRequest processRequest) {
+		switch(processRequest.getLanguage()) {
+			case "java":
 				process = new JavaProcess(processRequest);
-			default :
+				break;
+			default:
 				process = null;
 		}
 	}
+
 }
