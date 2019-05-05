@@ -72,9 +72,9 @@ public class ProcessFactoryTest {
 	}
 
 	@Test
-	public void constructorTest() {
+	public void constructorTestSuccess() {
 		ProcessRequest processRequest = new ProcessRequest();
-		processRequest.setSourceCode("public Main{}");
+		processRequest.setSourceCode("public class Main{}");
 		processRequest.setLanguage("java");
 		processRequest.setPk(1);
 		processRequest.setTestCases(testCases);
@@ -82,5 +82,18 @@ public class ProcessFactoryTest {
 		Process process = new ProcessFactory(processRequest).getProcess();
 
 		Assertions.assertEquals(true, process instanceof JavaProcess);
+	}
+
+	@Test
+	public void constructorTestFailure() {
+		ProcessRequest processRequest = new ProcessRequest();
+		processRequest.setSourceCode("public Main{}");
+		processRequest.setLanguage("jva");
+		processRequest.setPk(1);
+		processRequest.setTestCases(testCases);
+
+		Process process = new ProcessFactory(processRequest).getProcess();
+
+		Assertions.assertEquals(null, process);
 	}
 }
