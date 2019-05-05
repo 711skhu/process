@@ -15,13 +15,25 @@ public class FileNameUtils {
 
 	public static String getSourceFilePackageName(String sourceCode) {
 		String packageName;
-		String regex = "package[\\s]*([a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9.]+)[\\s]*;";
-		packageName = getMatchLetter(regex, sourceCode);
-		return (packageName == null) ? "" : packageName + ".";
+		if (sourceCode.substring(0, 7).equals("package")) {
+			String regex = "package[\\s]*([a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9._$]+)[\\s]*;";
+			packageName = getMatchLetter(regex, sourceCode);
+			if (packageName == null) {
+				throw new RuntimeException();
+			}
+		} else {
+			packageName = "";
+		}
+		return (packageName.isEmpty()) ? packageName : packageName + ".";
 	}
 
 	public static String getSourceFileClassName(String sourceCode) {
-		String regex = "[\\s]*public[\\s]*class[\\s]*([a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9.]+)[\\s]*";
-		return getMatchLetter(regex, sourceCode);
+		String regex = "[\\s]*[public||private||protected][\\s]*class[\\s]*([a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9._$]+)[\\s]*\\{";
+		String className = getMatchLetter(regex, sourceCode);
+		if (className == null) {
+			throw new RuntimeException();
+		} else {
+			return className;
+		}
 	}
 }
