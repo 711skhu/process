@@ -14,9 +14,10 @@ public abstract class SourceFile {
 	private String directoryPath;
 	private String sourceCode;
 	private String sourceFileExtension;
+	private String defaultDirectoryPath = "C:\\Users\\yeji\\Desktop\\711SKHUTESTFOLDER\\"; //현재 cmd에서 테스트를 위한 경로. 삭제 예정.
 
 	public SourceFile(long pk, String sourceCode, String sourceFileExtension) {
-		this.sourceCode = sourceCode;
+		this.sourceCode = sourceCode.trim();
 		this.packageName = FileNameUtils.getSourceFilePackageName(sourceCode);
 		this.className = FileNameUtils.getSourceFileClassName(sourceCode);
 		this.directoryPath = createDirectoryPath(pk);
@@ -24,7 +25,6 @@ public abstract class SourceFile {
 	}
 
 	public String createDirectoryPath(long pk) {
-		String defaultDirectoryPath = "C:\\Users";
 		String directoryPath = defaultDirectoryPath + pk;
 		String[] command = {"cmd.exe", "/c", "md " + directoryPath};
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
@@ -38,7 +38,7 @@ public abstract class SourceFile {
 
 	public void saveSourceFile() {
 		try {
-			OutputStream outputStream = new FileOutputStream(directoryPath + className + sourceFileExtension);
+			OutputStream outputStream = new FileOutputStream(defaultDirectoryPath + className + sourceFileExtension);
 			byte[] by = sourceCode.getBytes();
 			outputStream.write(by);
 		} catch (Exception e) {
