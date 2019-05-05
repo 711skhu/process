@@ -1,7 +1,6 @@
 package com.shouwn.oj.sourceFile;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 
 import com.shouwn.oj.util.FileNameUtils;
@@ -29,16 +28,17 @@ public abstract class SourceFile {
 		String[] command = {"cmd.exe", "/c", "md " + directoryPath};
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
 		try {
-			processBuilder.start();
-		} catch (IOException e) {
+			Process process = processBuilder.start();
+			process.waitFor();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return directoryPath;
+		return directoryPath+"//";
 	}
 
 	public void saveSourceFile() {
 		try {
-			OutputStream outputStream = new FileOutputStream(defaultDirectoryPath + className + sourceFileExtension);
+			OutputStream outputStream = new FileOutputStream(directoryPath + className + sourceFileExtension);
 			byte[] by = sourceCode.getBytes();
 			outputStream.write(by);
 		} catch (Exception e) {
@@ -50,8 +50,9 @@ public abstract class SourceFile {
 		String[] command = {"cmd.exe", "/c", "rd /s/q " + directoryPath};
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
 		try {
-			processBuilder.start();
-		} catch (IOException e) {
+			Process process = processBuilder.start();
+			process.waitFor();
+		} catch (Exception e) {
 			e.getStackTrace();
 		}
 	}
