@@ -1,6 +1,7 @@
 package com.shouwn.oj.sourceFile;
 
 import java.io.*;
+
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,7 +90,7 @@ public class sourceFileTest {
 			process = processBuilder.start();
 			bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "EUC-KR"));
 			bufferedReaderError = new BufferedReader(new InputStreamReader(process.getErrorStream(), "EUC-KR"));
-			Assert.assertEquals("C:\\Users\\yeji\\Desktop\\711SKHUTESTFOLDER\\" + sourceFile.getClassName() + ".java", bufferedReader.readLine());
+			Assert.assertEquals("C:\\Users\\yeji\\Desktop\\711SKHUTESTFOLDER\\" + pk + "\\" + sourceFile.getClassName() + ".java", bufferedReader.readLine());
 			Assert.assertEquals(null, bufferedReaderError.readLine());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -103,6 +104,7 @@ public class sourceFileTest {
 		BufferedReader bufferedReader;
 		BufferedReader bufferedReaderError;
 		Process process;
+
 		try {
 			process = processBuilder.start();
 			bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -112,9 +114,11 @@ public class sourceFileTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		SourceFile sourceFile = new JavaSourceFile(pk, sourceCode);
 		sourceFile.createDirectoryPath(pk);
 		processBuilder = new ProcessBuilder(command);
+
 		try {
 			process = processBuilder.start();
 			bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "EUC-KR"));
@@ -129,13 +133,15 @@ public class sourceFileTest {
 		sourceFile.deleteFolder();
 
 		processBuilder = new ProcessBuilder(command);
+
 		try {
 			process = processBuilder.start();
+			process.waitFor();
 			bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "EUC-KR"));
 			bufferedReaderError = new BufferedReader(new InputStreamReader(process.getErrorStream(), "EUC-KR"));
 			Assert.assertEquals(null, bufferedReader.readLine());
 			Assert.assertEquals("파일을 찾을 수 없습니다.", bufferedReaderError.readLine());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

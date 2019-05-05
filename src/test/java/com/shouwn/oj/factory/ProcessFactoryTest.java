@@ -3,14 +3,14 @@ package com.shouwn.oj.factory;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.shouwn.oj.machine.JavaProcessMachine;
+import com.shouwn.oj.machine.ProcessMachine;
 import com.shouwn.oj.model.entity.member.Admin;
 import com.shouwn.oj.model.entity.problem.Course;
 import com.shouwn.oj.model.entity.problem.Problem;
 import com.shouwn.oj.model.entity.problem.ProblemDetail;
 import com.shouwn.oj.model.entity.problem.TestCase;
 import com.shouwn.oj.model.request.process.ProcessRequest;
-import com.shouwn.oj.process.JavaProcess;
-import com.shouwn.oj.process.Process;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,28 +73,28 @@ public class ProcessFactoryTest {
 	@Test
 	public void constructorTestSuccess() {
 		ProcessRequest processRequest = ProcessRequest.builder()
-				.sourceCode("public Main{}")
+				.sourceCode("public class Main{}")
 				.language("java")
 				.pk(1)
 				.testCases(testCases)
 				.build();
 
-		Process process = new ProcessFactory(processRequest).getProcess();
+		ProcessMachine processMachine = new ProcessMachineFactory(processRequest).getProcessMachine();
 
-		Assertions.assertEquals(true, process instanceof JavaProcess);
+		Assertions.assertEquals(true, processMachine instanceof JavaProcessMachine);
 	}
 
 	@Test
 	public void constructorTestFailure() {
 		ProcessRequest processRequest = ProcessRequest.builder()
-				.sourceCode("public Main{}")
+				.sourceCode("public class Main{}")
 				.language("jaa")
 				.pk(1)
 				.testCases(testCases)
 				.build();
 
-		Process process = new ProcessFactory(processRequest).getProcess();
+		ProcessMachine processMachine = new ProcessMachineFactory(processRequest).getProcessMachine();
 
-		Assertions.assertEquals(null, process);
+		Assertions.assertEquals(null, processMachine);
 	}
 }

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,10 +14,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class JavaCompilerTest {
+	private String directoryPath;
+
+	@BeforeEach
+	void init() {
+		this.directoryPath = "C:\\Users\\yeji\\Desktop\\711SKHUTESTFOLDER\\";
+	}
 
 	@Test
 	public void compilerCommandTestSuccess() {
-		Compiler compiler = new JavaCompiler("Test", "T:\\test");
+		Compiler compiler = new JavaCompiler("Test", directoryPath);
 
 		StringBuilder sb = new StringBuilder();
 
@@ -30,14 +37,14 @@ public class JavaCompilerTest {
 
 	@Test
 	public void compilerCompileTestSuccess() throws Exception{
-		Compiler compiler = new JavaCompiler("Test", "C:\\test");
+		Compiler compiler = new JavaCompiler("Test", directoryPath);
 
 		compiler.compile();
 
 		String[] command = { "cmd.exe", "/c", "dir", "/s", "/b", "Test.class" };
 
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
-		processBuilder.directory(new File("C:\\test"));
+		processBuilder.directory(new File(directoryPath));
 
 		Process p = processBuilder.start();
 
@@ -45,19 +52,19 @@ public class JavaCompilerTest {
 
 		String result = br.readLine();
 
-		Assertions.assertEquals("C:\\test\\Test.class", result);
+		Assertions.assertEquals(directoryPath + "Test.class", result);
 	}
 
 	@Test
 	public void compilerCompileTestFailure() throws Exception{
-		Compiler compiler = new JavaCompiler("TestFailure", "C:\\test");
+		Compiler compiler = new JavaCompiler("TestFailure", directoryPath);
 
 		compiler.compile();
 
 		String[] command = { "cmd.exe", "/c", "dir", "/s", "/b", "TestFailure.class" };
 
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
-		processBuilder.directory(new File("C:\\test"));
+		processBuilder.directory(new File(directoryPath));
 
 		Process p = processBuilder.start();
 

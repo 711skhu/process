@@ -1,9 +1,10 @@
-package com.shouwn.oj.process;
+package com.shouwn.oj.machine;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.shouwn.oj.factory.ProcessFactory;
+import com.shouwn.oj.factory.ProcessMachineFactory;
+import com.shouwn.oj.machine.ProcessMachine;
 import com.shouwn.oj.model.entity.member.Admin;
 import com.shouwn.oj.model.entity.problem.Course;
 import com.shouwn.oj.model.entity.problem.Problem;
@@ -21,7 +22,7 @@ import static com.shouwn.oj.model.enums.ProblemType.HOMEWORK;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class JavaProcessTest {
+public class JavaProcessMachineTest {
 
 	private ProcessRequest processRequest;
 	private Admin professor;
@@ -80,9 +81,9 @@ public class JavaProcessTest {
 
 	@Test
 	public void javaProcessConstructorTestSuccess() {
-		Process process = new ProcessFactory(processRequest).getProcess();
+		ProcessMachine processMachine = new ProcessMachineFactory(processRequest).getProcessMachine();
 
-		Assertions.assertEquals(true, process.run() instanceof List);
+		Assertions.assertEquals(true, processMachine.run() instanceof List);
 	}
 
 }

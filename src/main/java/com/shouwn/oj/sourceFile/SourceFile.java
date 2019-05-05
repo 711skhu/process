@@ -33,12 +33,12 @@ public abstract class SourceFile {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return directoryPath+"//";
+		return directoryPath;
 	}
 
 	public void saveSourceFile() {
 		try {
-			OutputStream outputStream = new FileOutputStream(directoryPath + className + sourceFileExtension);
+			OutputStream outputStream = new FileOutputStream(directoryPath+"//" + className + sourceFileExtension);
 			byte[] by = sourceCode.getBytes();
 			outputStream.write(by);
 		} catch (Exception e) {

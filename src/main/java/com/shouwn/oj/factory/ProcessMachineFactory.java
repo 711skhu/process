@@ -6,18 +6,18 @@ import com.shouwn.oj.model.request.process.ProcessRequest;
 import lombok.Getter;
 
 @Getter
-public class ProcessFactory {
+public class ProcessMachineFactory {
 
-	private ProcessMachine process;
+	private ProcessMachine processMachine;
 
 	// TODO 생성자 예외 발생 시 처리.
-	public ProcessFactory(ProcessRequest processRequest) {
+	public ProcessMachineFactory(ProcessRequest processRequest) {
 		switch(processRequest.getLanguage()) {
 			case "java":
-				process = new JavaProcessMachine(processRequest);
+				processMachine = new JavaProcessMachine(processRequest);
 				break;
 			default:
-				process = null;
+				processMachine = null;
 		}
 	}
 

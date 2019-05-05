@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -27,6 +28,7 @@ public class JavaRunnerTest {
 	private ProblemDetail problemDetail;
 	private TestCase testCase;
 	private List<TestCase> testCases;
+	private String directoryPath;
 
 	@BeforeEach
 	void init() {
@@ -66,6 +68,8 @@ public class JavaRunnerTest {
 
 		this.testCases = new ArrayList<>();
 		testCases.add(testCase);
+
+		this.directoryPath = "C:\\Users\\yeji\\Desktop\\711SKHUTESTFOLDER\\";
 	}
 
 	@Test
@@ -94,7 +98,7 @@ public class JavaRunnerTest {
 
 	@Test
 	public void runnerRunSuccess() {
-		Runner runner = new JavaRunner("", "Test", "C:\\test");
+		Runner runner = new JavaRunner("", "Test", directoryPath);
 
 		List<String> results = runner.run(testCases);
 
@@ -103,7 +107,7 @@ public class JavaRunnerTest {
 
 	@Test
 	public void runnerRunFailure() {
-		Runner runner = new JavaRunner("", "TestFailure", "C:\\test");
+		Runner runner = new JavaRunner("", "TestFailure", directoryPath);
 
 		List<String> results = runner.run(testCases);
 
