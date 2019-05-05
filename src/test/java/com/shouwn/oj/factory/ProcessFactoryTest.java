@@ -53,7 +53,6 @@ public class ProcessFactoryTest {
 				.course(newCourse)
 				.build();
 
-
 		this.problemDetail = ProblemDetail.builder()
 				.title("junit_test")
 				.content("junit-test")
