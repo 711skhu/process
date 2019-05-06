@@ -25,7 +25,7 @@ public abstract class ProcessMachine {
 
 	public List<String> run() {
 		List<String> result;
-		sourceFile.saveSourceFile();
+		sourceFile.createSourceFile();
 		compiler.compile();
 		result = runner.run(testCases);
 		sourceFile.deleteFolder();

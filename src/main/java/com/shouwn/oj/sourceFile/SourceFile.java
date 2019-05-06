@@ -1,5 +1,6 @@
 package com.shouwn.oj.sourceFile;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
@@ -8,6 +9,7 @@ import lombok.Getter;
 
 @Getter
 public abstract class SourceFile {
+	private long pk;
 	private String packageName;
 	private String className;
 	private String directoryPath;
@@ -16,17 +18,20 @@ public abstract class SourceFile {
 	private String defaultDirectoryPath = "C:\\Users\\yeji\\Desktop\\711SKHUTESTFOLDER\\"; //현재 cmd에서 테스트를 위한 경로. 삭제 예정.
 
 	public SourceFile(long pk, String sourceCode, String sourceFileExtension) {
+		this.pk = pk;
 		this.sourceCode = sourceCode.trim();
 		this.packageName = FileNameUtils.getSourceFilePackageName(sourceCode);
 		this.className = FileNameUtils.getSourceFileClassName(sourceCode);
-		this.directoryPath = createDirectoryPath(pk);
+		this.directoryPath = createDirectoryPath();
 		this.sourceFileExtension = sourceFileExtension;
 	}
 
-	public String createDirectoryPath(long pk) {
+	public String createDirectoryPath() {
 		String directoryPath = defaultDirectoryPath + pk;
-		String[] command = {"cmd.exe", "/c", "md " + directoryPath};
+		String[] command = {"cmd.exe", "/c", "md " + pk};
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
+		processBuilder.directory(new File(defaultDirectoryPath));
+
 		try {
 			Process process = processBuilder.start();
 			process.waitFor();
@@ -36,9 +41,9 @@ public abstract class SourceFile {
 		return directoryPath;
 	}
 
-	public void saveSourceFile() {
+	public void createSourceFile() {
 		try {
-			OutputStream outputStream = new FileOutputStream(directoryPath+"//" + className + sourceFileExtension);
+			OutputStream outputStream = new FileOutputStream(directoryPath + "//" + className + sourceFileExtension);
 			byte[] by = sourceCode.getBytes();
 			outputStream.write(by);
 		} catch (Exception e) {
@@ -47,8 +52,10 @@ public abstract class SourceFile {
 	}
 
 	public void deleteFolder() {
-		String[] command = {"cmd.exe", "/c", "rd /s/q " + directoryPath};
+		String[] command = {"cmd.exe", "/c", "rd /s/q " + pk};
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
+		processBuilder.directory(new File(defaultDirectoryPath));
+
 		try {
 			Process process = processBuilder.start();
 			process.waitFor();

@@ -28,7 +28,7 @@ public class sourceFileTest {
 	}
 
 	@Test
-	public void createDirectoryPath정상작동() {
+	public void createDirectoryPathSuccess() {
 		String[] command = {"cmd.exe", "/c", "cd C:\\Users\\yeji\\Desktop & dir /s/b ", String.valueOf(pk)};
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
 		BufferedReader bufferedReader;
@@ -47,7 +47,7 @@ public class sourceFileTest {
 		}
 
 		SourceFile sourceFile = new JavaSourceFile(pk, sourceCode); //폴더 생성
-		sourceFile.createDirectoryPath(pk);
+		sourceFile.createDirectoryPath();
 		processBuilder = new ProcessBuilder(command);
 
 		//폴더 생성 후 폴더가 존재하는지 확인.
@@ -63,9 +63,9 @@ public class sourceFileTest {
 	}
 
 	@Test
-	public void saveSourceFile정상작동() {
+	public void createSourceFileSuccess() {
 		SourceFile sourceFile = new JavaSourceFile(pk, sourceCode);
-		sourceFile.createDirectoryPath(pk);
+		sourceFile.createDirectoryPath();
 		String[] command = {"cmd.exe", "/c", "cd C:\\Users\\yeji\\Desktop\\711SKHUTESTFOLDER & dir /s/b ", sourceFile.getClassName() + ".java"};
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
 		BufferedReader bufferedReader;
@@ -82,7 +82,7 @@ public class sourceFileTest {
 			e.printStackTrace();
 		}
 
-		sourceFile.saveSourceFile();
+		sourceFile.createSourceFile();
 
 		processBuilder = new ProcessBuilder(command);
 
@@ -98,7 +98,7 @@ public class sourceFileTest {
 	}
 
 	@Test
-	public void deleteFolder정상작동() {
+	public void deleteFolderSuccess() {
 		String[] command = {"cmd.exe", "/c", "cd C:\\Users\\yeji\\Desktop & dir /s/b ", String.valueOf(pk)};
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
 		BufferedReader bufferedReader;
@@ -116,7 +116,7 @@ public class sourceFileTest {
 		}
 
 		SourceFile sourceFile = new JavaSourceFile(pk, sourceCode);
-		sourceFile.createDirectoryPath(pk);
+		sourceFile.createDirectoryPath();
 		processBuilder = new ProcessBuilder(command);
 
 		try {
