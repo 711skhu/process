@@ -1,9 +1,11 @@
 package com.shouwn.oj.sourceFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 
+import com.shouwn.oj.exception.process.processMachine.SourceFileCreateFailedException;
+import com.shouwn.oj.exception.process.processMachine.SourceFolderCreateFailedException;
+import com.shouwn.oj.exception.process.processMachine.SourceFolderDeleteFailedException;
+import com.shouwn.oj.factory.ProcessFactory;
 import com.shouwn.oj.util.FileNameUtils;
 import lombok.Getter;
 
@@ -29,14 +31,17 @@ public abstract class SourceFile {
 	public String createDirectoryPath() {
 		String directoryPath = defaultDirectoryPath + pk;
 		String[] command = {"cmd.exe", "/c", "md " + pk};
-		ProcessBuilder processBuilder = new ProcessBuilder(command);
-		processBuilder.directory(new File(defaultDirectoryPath));
 
 		try {
-			Process process = processBuilder.start();
-			process.waitFor();
+			Process process = ProcessFactory.processRun(command, defaultDirectoryPath);
+			BufferedReader bufferedReaderError = new BufferedReader(new InputStreamReader(process.getErrorStream(), "EUC-KR"));
+			String errorMessage = bufferedReaderError.readLine();
+
+			if (errorMessage != null && errorMessage.contains("이미 있습니다.")) {
+				throw new SourceFolderCreateFailedException("SourceFolderCreateFailedException : 소스파일 폴더 생성 실패.");
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new SourceFolderCreateFailedException("SourceFolderCreateFailedException : 소스파일 폴더 생성 실패.");
 		}
 		return directoryPath;
 	}
@@ -47,7 +52,7 @@ public abstract class SourceFile {
 			byte[] by = sourceCode.getBytes();
 			outputStream.write(by);
 		} catch (Exception e) {
-			e.getStackTrace();
+			throw new SourceFileCreateFailedException("SourceFileCreateFailedException : 소스파일 생성 실패.");
 		}
 	}
 
@@ -57,10 +62,15 @@ public abstract class SourceFile {
 		processBuilder.directory(new File(defaultDirectoryPath));
 
 		try {
-			Process process = processBuilder.start();
-			process.waitFor();
+			Process process = ProcessFactory.processRun(command, defaultDirectoryPath);
+			BufferedReader bufferedReaderError = new BufferedReader(new InputStreamReader(process.getErrorStream(), "EUC-KR"));
+			String errorMessage = bufferedReaderError.readLine();
+
+			if (errorMessage != null && errorMessage.contains("찾을 수 없습니다.")) {
+				throw new SourceFolderDeleteFailedException("SourceFolderDeleteFailedException : 소스파일 폴더 삭제 실패.");
+			}
 		} catch (Exception e) {
-			e.getStackTrace();
+			throw new SourceFolderDeleteFailedException("SourceFolderDeleteFailedException : 소스파일 폴더 삭제 실패.");
 		}
 	}
 }
