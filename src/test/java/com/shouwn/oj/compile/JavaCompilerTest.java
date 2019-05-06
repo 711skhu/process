@@ -1,9 +1,10 @@
 package com.shouwn.oj.compile;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 
+import com.shouwn.oj.exception.process.processMachine.CompileFailedException;
+import com.shouwn.oj.factory.ProcessFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ public class JavaCompilerTest {
 
 	@BeforeEach
 	void init() {
-		this.directoryPath = "C:\\Users\\yeji\\Desktop\\711SKHUTESTFOLDER\\";
+		this.directoryPath = "C:\\test";
 	}
 
 	@Test
@@ -38,41 +39,27 @@ public class JavaCompilerTest {
 	@Test
 	public void compilerCompileTestSuccess() throws Exception{
 		Compiler compiler = new JavaCompiler("Test", directoryPath);
-
 		compiler.compile();
 
 		String[] command = { "cmd.exe", "/c", "dir", "/s", "/b", "Test.class" };
 
-		ProcessBuilder processBuilder = new ProcessBuilder(command);
-		processBuilder.directory(new File(directoryPath));
-
-		Process p = processBuilder.start();
+		Process p = ProcessFactory.processRun(command, directoryPath);
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream(), "EUC-KR"));
-
 		String result = br.readLine();
 
-		Assertions.assertEquals(directoryPath + "Test.class", result);
+		Assertions.assertEquals(directoryPath + "\\Test.class", result);
 	}
 
 	@Test
-	public void compilerCompileTestFailure() throws Exception{
-		Compiler compiler = new JavaCompiler("TestFailure", directoryPath);
+	public void compilerCompileTestFailure(){
+		Compiler compilerWrongFileName = new JavaCompiler("TestFailure", directoryPath);
 
-		compiler.compile();
+		Assertions.assertThrows(CompileFailedException.class, () -> compilerWrongFileName.compile());
 
-		String[] command = { "cmd.exe", "/c", "dir", "/s", "/b", "TestFailure.class" };
+		Compiler compilerWrongPath = new JavaCompiler("Test", directoryPath + "\\wrongPath");
 
-		ProcessBuilder processBuilder = new ProcessBuilder(command);
-		processBuilder.directory(new File(directoryPath));
-
-		Process p = processBuilder.start();
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(p.getErrorStream(), "EUC-KR"));
-
-		String result = br.readLine();
-
-		Assertions.assertEquals("파일을 찾을 수 없습니다.", result);
+		Assertions.assertThrows(CompileFailedException.class, () -> compilerWrongPath.compile());
 	}
 
 }

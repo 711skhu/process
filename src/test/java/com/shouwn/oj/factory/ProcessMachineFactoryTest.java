@@ -22,7 +22,7 @@ import static com.shouwn.oj.model.enums.ProblemType.HOMEWORK;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class ProcessFactoryTest {
+public class ProcessMachineFactoryTest {
 
 	private Admin professor;
 	private Course newCourse;

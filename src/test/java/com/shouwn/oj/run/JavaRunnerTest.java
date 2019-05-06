@@ -3,6 +3,7 @@ package com.shouwn.oj.run;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.shouwn.oj.exception.process.processMachine.RunFailedException;
 import com.shouwn.oj.model.entity.member.Admin;
 import com.shouwn.oj.model.entity.problem.Course;
 import com.shouwn.oj.model.entity.problem.Problem;
@@ -52,7 +53,6 @@ public class JavaRunnerTest {
 				.course(newCourse)
 				.build();
 
-
 		this.problemDetail = ProblemDetail.builder()
 				.title("junit_test")
 				.content("junit-test")
@@ -69,7 +69,7 @@ public class JavaRunnerTest {
 		this.testCases = new ArrayList<>();
 		testCases.add(testCase);
 
-		this.directoryPath = "C:\\Users\\yeji\\Desktop\\711SKHUTESTFOLDER\\";
+		this.directoryPath = "C:\\test";
 	}
 
 	@Test
@@ -107,10 +107,23 @@ public class JavaRunnerTest {
 
 	@Test
 	public void runnerRunFailure() {
-		Runner runner = new JavaRunner("", "TestFailure", directoryPath);
+		Runner runnerWrongFileName = new JavaRunner("", "TestFailure", directoryPath);
+
+		Assertions.assertThrows(RunFailedException.class, () -> runnerWrongFileName.run(testCases));
+
+		Runner runnerWrongPath = new JavaRunner("", "Test", directoryPath + "\\wrongPath");
+
+		Assertions.assertThrows(RunFailedException.class, () -> runnerWrongPath.run(testCases));
+	}
+
+	@Test
+	public void runnerRunExceptionResult() {
+		Runner runner = new JavaRunner("", "Test", directoryPath);
+		testCase.setParams("s");
 
 		List<String> results = runner.run(testCases);
+		String exceptionMessage = results.get(results.size() - 1);
 
-		Assertions.assertEquals("오류: 기본 클래스 TestFailure을(를) 찾거나 로드할 수 없습니다.", results.get(0));
+		Assertions.assertEquals(true, exceptionMessage.contains("Exception in thread"));
 	}
 }

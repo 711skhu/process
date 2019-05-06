@@ -23,12 +23,15 @@ public abstract class ProcessMachine {
 		this.pk = processRequest.getPk();
 	}
 
-	public List<String> run() {
-		List<String> result;
+	public List<String> run() throws Exception {
 		sourceFile.createSourceFile();
+
 		compiler.compile();
-		result = runner.run(testCases);
+
+		List<String> result = runner.run(testCases);
+
 		sourceFile.deleteFolder();
+
 		return result;
 	}
 }

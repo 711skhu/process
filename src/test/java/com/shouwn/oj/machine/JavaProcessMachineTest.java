@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.shouwn.oj.factory.ProcessMachineFactory;
-import com.shouwn.oj.machine.ProcessMachine;
 import com.shouwn.oj.model.entity.member.Admin;
 import com.shouwn.oj.model.entity.problem.Course;
 import com.shouwn.oj.model.entity.problem.Problem;
@@ -80,10 +79,9 @@ public class JavaProcessMachineTest {
 	}
 
 	@Test
-	public void javaProcessConstructorTestSuccess() {
+	public void javaProcessMachineRunTestSuccess() throws Exception {
 		ProcessMachine processMachine = new ProcessMachineFactory(processRequest).getProcessMachine();
 
 		Assertions.assertEquals(true, processMachine.run() instanceof List);
 	}
-
 }

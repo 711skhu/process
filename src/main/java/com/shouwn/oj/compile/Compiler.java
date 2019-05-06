@@ -1,10 +1,10 @@
 package com.shouwn.oj.compile;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
+import com.shouwn.oj.exception.process.processMachine.CompileFailedException;
+import com.shouwn.oj.factory.ProcessFactory;
 import lombok.Getter;
 
 @Getter
@@ -19,20 +19,18 @@ public abstract class Compiler {
 	}
 
 	public void compile() {
-		ProcessBuilder processBuilder = new ProcessBuilder(command);
-		processBuilder.directory(new File(directoryPath));
-
 		try {
-			Process process = processBuilder.start();
+			Process process = ProcessFactory.processRun(command, directoryPath);
 
 			BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream(), "EUC-KR"));
 
 			if (stdErr.readLine() != null) {
-				//throw new Exception(); //파일이 존재하지 않을 때 발생하는 에러
+				throw new CompileFailedException("컴파일 실행중 오류가 발생했습니다.");
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
+		} catch (Exception e) {
+			throw new CompileFailedException("컴파일 실행중 오류가 발생했습니다.");
+		}
 	}
+
 }
