@@ -1,5 +1,7 @@
 package com.shouwn.oj.util;
 
+import com.shouwn.oj.exception.process.ClassNameWrongException;
+import com.shouwn.oj.exception.process.PackageNameWrongException;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,7 +33,7 @@ public class FileNameUtilsTest {
 				"import java.util.regex.Pattern;\n" +
 				"\n" +
 				"public class FileNameUtils {}";
-		Assertions.assertThrows(RuntimeException.class, () -> FileNameUtils.getSourceFilePackageName(sourceCode));
+		Assertions.assertThrows(PackageNameWrongException.class, () -> FileNameUtils.getSourceFilePackageName(sourceCode));
 	}
 
 	//개행
@@ -44,7 +46,7 @@ public class FileNameUtilsTest {
 				"import java.util.regex.Pattern;\n" +
 				"\n" +
 				"public class FileNameUtils {}";
-		Assertions.assertThrows(RuntimeException.class, () -> FileNameUtils.getSourceFilePackageName(sourceCode));
+		Assertions.assertThrows(PackageNameWrongException.class, () -> FileNameUtils.getSourceFilePackageName(sourceCode));
 	}
 
 	//공백
@@ -56,7 +58,7 @@ public class FileNameUtilsTest {
 				"import java.util.regex.Pattern;\n" +
 				"\n" +
 				"public class FileNameUtils {}";
-		Assertions.assertThrows(RuntimeException.class, () -> FileNameUtils.getSourceFilePackageName(sourceCode));
+		Assertions.assertThrows(PackageNameWrongException.class, () -> FileNameUtils.getSourceFilePackageName(sourceCode));
 	}
 
 	@Test
@@ -99,7 +101,7 @@ public class FileNameUtilsTest {
 				"import java.util.regex.Pattern;\n" +
 				"\n" +
 				"protected class !FileNameUtils! {}";
-		Assertions.assertThrows(RuntimeException.class, () -> FileNameUtils.getSourceFileClassName(sourceCode));
+		Assertions.assertThrows(ClassNameWrongException.class, () -> FileNameUtils.getSourceFileClassName(sourceCode));
 	}
 
 	//개행
@@ -111,7 +113,7 @@ public class FileNameUtilsTest {
 				"import java.util.regex.Pattern;\n" +
 				"\n" +
 				"protected class FileNa\nmeUtils\n {}";
-		Assertions.assertThrows(RuntimeException.class, () -> FileNameUtils.getSourceFileClassName(sourceCode));
+		Assertions.assertThrows(ClassNameWrongException.class, () -> FileNameUtils.getSourceFileClassName(sourceCode));
 	}
 
 	//공백
@@ -123,6 +125,6 @@ public class FileNameUtilsTest {
 				"import java.util.regex.Pattern;\n" +
 				"\n" +
 				"protected class FileNa   meUtils {}";
-		Assertions.assertThrows(RuntimeException.class, () -> FileNameUtils.getSourceFileClassName(sourceCode));
+		Assertions.assertThrows(ClassNameWrongException.class, () -> FileNameUtils.getSourceFileClassName(sourceCode));
 	}
 }
