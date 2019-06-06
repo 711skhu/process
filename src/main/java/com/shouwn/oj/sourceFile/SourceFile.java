@@ -1,10 +1,6 @@
 package com.shouwn.oj.sourceFile;
 
 import java.io.*;
-
-import com.shouwn.oj.exception.process.processMachine.SourceFileCreateFailedException;
-import com.shouwn.oj.exception.process.processMachine.SourceFolderCreateFailedException;
-import com.shouwn.oj.exception.process.processMachine.SourceFolderDeleteFailedException;
 import com.shouwn.oj.factory.ProcessFactory;
 import com.shouwn.oj.util.FileNameUtils;
 import lombok.Getter;
@@ -38,10 +34,10 @@ public abstract class SourceFile {
 			String errorMessage = bufferedReaderError.readLine();
 
 			if (errorMessage != null && errorMessage.contains("이미 있습니다.")) {
-				throw new SourceFolderCreateFailedException("SourceFolderCreateFailedException : 소스파일 폴더 생성 실패.");
+				throw new IllegalStateException("IllegalStateException : 소스파일 폴더 생성 실패.");
 			}
 		} catch (Exception e) {
-			throw new SourceFolderCreateFailedException("SourceFolderCreateFailedException : 소스파일 폴더 생성 실패.");
+			throw new IllegalStateException("IllegalStateException : 소스파일 폴더 생성 실패.");
 		}
 		return directoryPath;
 	}
@@ -52,7 +48,7 @@ public abstract class SourceFile {
 			byte[] by = sourceCode.getBytes();
 			outputStream.write(by);
 		} catch (Exception e) {
-			throw new SourceFileCreateFailedException("SourceFileCreateFailedException : 소스파일 생성 실패.");
+			throw new IllegalStateException("IllegalStateException : 소스파일 생성 실패.");
 		}
 	}
 
@@ -67,10 +63,10 @@ public abstract class SourceFile {
 			String errorMessage = bufferedReaderError.readLine();
 
 			if (errorMessage != null && errorMessage.contains("찾을 수 없습니다.")) {
-				throw new SourceFolderDeleteFailedException("SourceFolderDeleteFailedException : 소스파일 폴더 삭제 실패.");
+				throw new IllegalStateException("IllegalStateException : 소스파일 폴더 삭제 실패.");
 			}
 		} catch (Exception e) {
-			throw new SourceFolderDeleteFailedException("SourceFolderDeleteFailedException : 소스파일 폴더 삭제 실패.");
+			throw new IllegalStateException("IllegalStateException : 소스파일 폴더 삭제 실패.");
 		}
 	}
 }

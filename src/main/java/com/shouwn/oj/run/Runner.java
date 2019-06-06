@@ -4,8 +4,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.shouwn.oj.exception.process.processMachine.RunFailedException;
-
 import com.shouwn.oj.model.entity.problem.TestCase;
 import com.shouwn.oj.util.StringUtils;
 import lombok.Getter;
@@ -45,7 +43,7 @@ public abstract class Runner {
 				String error = StringUtils.inputStreamToString(stdErr);
 				if(result == null) {
 					if(error.contains("오류")) {
-						throw new RunFailedException("파일 실행중 오류가 발생했습니다.");
+						throw new IllegalStateException("파일 실행중 오류가 발생했습니다.");
 					}
 					else {
 						process.destroy();
@@ -57,7 +55,7 @@ public abstract class Runner {
 				results.add(result);
 			}
 		} catch (Exception e) {
-			throw new RunFailedException("파일 실행중 오류가 발생했습니다.");
+			throw new IllegalStateException("파일 실행중 오류가 발생했습니다.");
 		}
 
 		return results;
