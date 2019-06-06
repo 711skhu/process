@@ -3,7 +3,7 @@ package com.shouwn.oj.compile;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import com.shouwn.oj.exception.process.processMachine.CompileFailedException;
+import com.shouwn.oj.exception.IllegalStateException;
 import com.shouwn.oj.factory.ProcessFactory;
 import lombok.Getter;
 
@@ -25,11 +25,11 @@ public abstract class Compiler {
 			BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream(), "EUC-KR"));
 
 			if (stdErr.readLine() != null) {
-				throw new CompileFailedException("컴파일 실행중 오류가 발생했습니다.");
+				throw new IllegalStateException("컴파일 실행중 오류가 발생했습니다.");
 			}
 
 		} catch (Exception e) {
-			throw new CompileFailedException("컴파일 실행중 오류가 발생했습니다.");
+			throw new IllegalStateException("컴파일 실행중 오류가 발생했습니다.");
 		}
 	}
 

@@ -9,13 +9,7 @@ public class ProcessFactory{
 		processBuilder.directory(new File(directoryPath));
 
 		Process process = processBuilder.start();
-
-		System.out.println("팩토리");
-
 		process.waitFor();
-
-		System.out.println("팩토리");
-
 
 		return process;
 	}

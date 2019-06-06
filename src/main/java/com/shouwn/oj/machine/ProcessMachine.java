@@ -3,6 +3,7 @@ package com.shouwn.oj.machine;
 import java.util.List;
 
 import com.shouwn.oj.compile.Compiler;
+import com.shouwn.oj.exception.OJException;
 import com.shouwn.oj.model.entity.problem.TestCase;
 import com.shouwn.oj.model.request.process.ProcessRequest;
 import com.shouwn.oj.run.Runner;
@@ -23,7 +24,7 @@ public abstract class ProcessMachine {
 		this.pk = processRequest.getPk();
 	}
 
-	public List<String> run() throws Exception {
+	public List<String> run() throws OJException {
 		sourceFile.createSourceFile();
 
 		compiler.compile();
