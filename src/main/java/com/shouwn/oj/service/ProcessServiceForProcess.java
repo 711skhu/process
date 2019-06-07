@@ -19,13 +19,13 @@ public class ProcessServiceForProcess {
 	}
 
 	public int getSolutionResult(ProcessRequest processRequest) {
-		List<String> result = ProcessMachineFactory.createProcessMachine(processRequest).run();
-		return getCountOfMatchResult(processRequest.getProblemDetailId(), result);
+		List<TestCase> testCases = new LinkedList<>(testCaseService.findByProblemDetailIdOrderById(processRequest.getProblemDetailId()));
+		List<String> result = ProcessMachineFactory.createProcessMachine(processRequest, testCases).run();
+		return getCountOfMatchResult(testCases, result);
 	}
 
-	private int getCountOfMatchResult(long problemDetailId, List<String> result) {
+	private int getCountOfMatchResult(List<TestCase> testCases, List<String> result) {
 		List<String> userAnswers = new LinkedList<>(result);
-		List<TestCase> testCases = new LinkedList<>(testCaseService.findByProblemDetailIdOrderById(problemDetailId));
 		List<String> problemAnswers = new LinkedList<>();
 		testCases.stream().forEach(testCase -> problemAnswers.add(testCase.getResult()));
 		return compareAnswers(userAnswers, problemAnswers);
