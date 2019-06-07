@@ -26,9 +26,9 @@ public abstract class SourceFile {
 		this.sourceCode = sourceCode.trim();
 		this.packageName = FileNameUtils.getSourceFilePackageName(sourceCode);
 		this.className = FileNameUtils.getSourceFileClassName(sourceCode);
+		this.osCommand = osCommand;
 		this.directoryPath = createDirectoryPath();
 		this.sourceFileExtension = sourceFileExtension;
-		this.osCommand = osCommand;
 	}
 
 	public String createDirectoryPath() {

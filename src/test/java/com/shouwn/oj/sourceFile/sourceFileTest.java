@@ -1,25 +1,20 @@
 package com.shouwn.oj.sourceFile;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 
-import com.shouwn.oj.exception.process.processMachine.SourceFileCreateFailedException;
-import com.shouwn.oj.exception.process.processMachine.SourceFolderCreateFailedException;
-import com.shouwn.oj.exception.process.processMachine.SourceFolderDeleteFailedException;
+import com.shouwn.oj.command.OSCommand;
+import com.shouwn.oj.command.WindowCommand;
 import com.shouwn.oj.factory.ProcessFactory;
-import org.apache.tomcat.jni.Proc;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
 public class sourceFileTest {
 	private long pk;
 	private String sourceCode;
+	private OSCommand osCommand;
 
 	@BeforeEach
 	void initEach() {
@@ -30,12 +25,13 @@ public class sourceFileTest {
 				"import java.util.regex.Pattern;\n" +
 				"\n" +
 				"public class FileNameUtils {}";
+		this.osCommand = new WindowCommand();
 	}
 
 	@Test
 	public void createDirectoryPathSuccess() {
 		String directoryPath = "C:\\Users\\yeji\\Desktop";
-		String[] command = {"cmd.exe", "/c", "dir /s/b ", String.valueOf(pk)};
+		List<String> command = Arrays.asList("cmd.exe", "/c", "dir /s/b ", String.valueOf(pk));
 		BufferedReader bufferedReader;
 		BufferedReader bufferedReaderError;
 		Process process;
@@ -51,7 +47,7 @@ public class sourceFileTest {
 			e.printStackTrace();
 		}
 
-		new JavaSourceFile(pk, sourceCode); //폴더 생성
+		new JavaSourceFile(pk, sourceCode, osCommand); //폴더 생성
 
 		//폴더 생성 후 폴더가 존재하는지 확인.
 		try {
@@ -68,13 +64,13 @@ public class sourceFileTest {
 	@Test
 	public void createDirectoryPathExistSourceFolderExceptionSuccess() {
 		String directoryPath = "C:\\Users\\yeji\\Desktop";
-		String[] findFolderCommand = {"cmd.exe", "/c", "dir /s/b ", String.valueOf(pk)};
 		BufferedReader bufferedReader;
 		BufferedReader bufferedReaderError;
 		Process process;
+		List<String> command = Arrays.asList("cmd.exe", "/c", "dir /s/b ", String.valueOf(pk));
 
 		try {
-			process = ProcessFactory.processRun(findFolderCommand, directoryPath);
+			process = ProcessFactory.processRun(command, directoryPath);
 			bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "EUC-KR"));
 			bufferedReaderError = new BufferedReader(new InputStreamReader(process.getErrorStream(), "EUC-KR"));
 			Assertions.assertEquals("C:\\Users\\yeji\\Desktop\\711SKHUTESTFOLDER\\" + pk, bufferedReader.readLine());
@@ -83,14 +79,14 @@ public class sourceFileTest {
 			e.printStackTrace();
 		}
 
-		Assertions.assertThrows(SourceFolderCreateFailedException.class, () -> new JavaSourceFile(pk, sourceCode));
+		Assertions.assertThrows(IllegalStateException.class, () -> new JavaSourceFile(pk, sourceCode, new WindowCommand()));
 	}
 
 	@Test
 	public void createSourceFileSuccess() {
 		String directoryPath = "C:\\Users\\yeji\\Desktop\\711SKHUTESTFOLDER";
-		SourceFile sourceFile = new JavaSourceFile(pk, sourceCode);
-		String[] command = {"cmd.exe", "/c", "dir /s/b ", sourceFile.getClassName() + ".java"};
+		SourceFile sourceFile = new JavaSourceFile(pk, sourceCode, osCommand);
+		List<String> command = Arrays.asList("cmd.exe", "/c", "dir /s/b ", sourceFile.getClassName() + ".java");
 		BufferedReader bufferedReader;
 		BufferedReader bufferedReaderError;
 		Process process;
@@ -122,11 +118,11 @@ public class sourceFileTest {
 	@Test
 	public void createSourceFileNotFoundSourceFolderExceptionSuccess() {
 		String directoryPath = "C:\\Users\\yeji\\Desktop";
-		String[] command = {"cmd.exe", "/c", "dir /s/b ", String.valueOf(pk)};
+		List<String> command = Arrays.asList("cmd.exe", "/c", "dir /s/b ", String.valueOf(pk));
 		BufferedReader bufferedReader;
 		BufferedReader bufferedReaderError;
 		Process process;
-		SourceFile sourceFile = new JavaSourceFile(pk, sourceCode);
+		SourceFile sourceFile = new JavaSourceFile(pk, sourceCode, osCommand);
 		sourceFile.deleteFolder();
 
 		//현재 파일을 저장하려는 위치에 폴더가 없는 것을 확인.
@@ -140,13 +136,13 @@ public class sourceFileTest {
 			e.printStackTrace();
 		}
 
-		Assertions.assertThrows(SourceFileCreateFailedException.class, 	() -> sourceFile.createSourceFile());
+		Assertions.assertThrows(IllegalStateException.class, () -> sourceFile.createSourceFile());
 	}
 
 	@Test
 	public void deleteFolderSuccess() {
 		String directoryPath = "C:\\Users\\yeji\\Desktop";
-		String[] command = {"cmd.exe", "/c", "dir /s/b ", String.valueOf(pk)};
+		List<String> command = Arrays.asList("cmd.exe", "/c", "dir /s/b ", String.valueOf(pk));
 		BufferedReader bufferedReader;
 		BufferedReader bufferedReaderError;
 		Process process;
@@ -161,7 +157,7 @@ public class sourceFileTest {
 			e.printStackTrace();
 		}
 
-		SourceFile sourceFile = new JavaSourceFile(pk, sourceCode);
+		SourceFile sourceFile = new JavaSourceFile(pk, sourceCode, osCommand);
 
 		try {
 			process = ProcessFactory.processRun(command, directoryPath);
@@ -190,12 +186,12 @@ public class sourceFileTest {
 	@Test
 	public void deleteFolderNotFoundExceptionSuccess() {
 		String directoryPath = "C:\\Users\\yeji\\Desktop";
-		String[] command = {"cmd.exe", "/c", "dir /s/b ", String.valueOf(pk)};
+		List<String> command = Arrays.asList("cmd.exe", "/c", "dir /s/b ", String.valueOf(pk));
 		BufferedReader bufferedReader;
 		BufferedReader bufferedReaderError;
 		Process process;
 
-		SourceFile sourceFile = new JavaSourceFile(pk, sourceCode);
+		SourceFile sourceFile = new JavaSourceFile(pk, sourceCode, osCommand);
 		sourceFile.deleteFolder();
 
 		try {
@@ -208,6 +204,6 @@ public class sourceFileTest {
 			e.printStackTrace();
 		}
 
-		Assertions.assertThrows(SourceFolderDeleteFailedException.class, () -> sourceFile.deleteFolder());
+		Assertions.assertThrows(IllegalStateException.class, () -> sourceFile.deleteFolder());
 	}
 }
