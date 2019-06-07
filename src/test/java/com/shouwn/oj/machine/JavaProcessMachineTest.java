@@ -13,14 +13,9 @@ import com.shouwn.oj.model.request.process.ProcessRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.shouwn.oj.model.enums.ProblemType.HOMEWORK;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
 public class JavaProcessMachineTest {
 
 	private ProcessRequest processRequest;
@@ -72,15 +67,14 @@ public class JavaProcessMachineTest {
 
 		this.processRequest = ProcessRequest.builder()
 				.language("java")
-				.pk(1)
+				.problemDetailId(1)
 				.sourceCode("public class Main {}")
-				.testCases(testCases)
 				.build();
 	}
 
 	@Test
-	public void javaProcessMachineRunTestSuccess() throws Exception {
-		ProcessMachine processMachine = new ProcessMachineFactory(processRequest).getProcessMachine();
+	public void javaProcessMachineRunTestSuccess() {
+		ProcessMachine processMachine = ProcessMachineFactory.createProcessMachine(this.processRequest, this.testCases);
 
 		Assertions.assertEquals(true, processMachine.run() instanceof List);
 	}

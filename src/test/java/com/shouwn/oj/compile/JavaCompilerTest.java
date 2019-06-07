@@ -2,33 +2,36 @@ package com.shouwn.oj.compile;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 
-import com.shouwn.oj.exception.process.processMachine.CompileFailedException;
+import com.shouwn.oj.command.OSCommand;
+import com.shouwn.oj.command.WindowCommand;
+import com.shouwn.oj.exception.IllegalStateException;
 import com.shouwn.oj.factory.ProcessFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
 public class JavaCompilerTest {
+
 	private String directoryPath;
+
+	private OSCommand osCommand;
 
 	@BeforeEach
 	void init() {
 		this.directoryPath = "C:\\test";
+		this.osCommand = new WindowCommand();
 	}
 
 	@Test
 	public void compilerCommandTestSuccess() {
-		Compiler compiler = new JavaCompiler("Test", directoryPath);
+		Compiler compiler = new JavaCompiler("Test", directoryPath, osCommand);
 
 		StringBuilder sb = new StringBuilder();
 
-		for (String s : compiler.getCommand()) {
+		for (String s : compiler.getCommands()) {
 			sb.append(s);
 			sb.append(" ");
 		}
@@ -37,13 +40,13 @@ public class JavaCompilerTest {
 	}
 
 	@Test
-	public void compilerCompileTestSuccess() throws Exception{
-		Compiler compiler = new JavaCompiler("Test", directoryPath);
+	public void compilerCompileTestSuccess() throws Exception {
+		Compiler compiler = new JavaCompiler("Test", directoryPath, osCommand);
 		compiler.compile();
 
-		String[] command = { "cmd.exe", "/c", "dir", "/s", "/b", "Test.class" };
+		List<String> commands = Arrays.asList("cmd.exe", "/c", "dir", "/s", "/b", "Test.class");
 
-		Process p = ProcessFactory.processRun(command, directoryPath);
+		Process p = ProcessFactory.processRun(commands, directoryPath);
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream(), "EUC-KR"));
 		String result = br.readLine();
@@ -52,14 +55,14 @@ public class JavaCompilerTest {
 	}
 
 	@Test
-	public void compilerCompileTestFailure(){
-		Compiler compilerWrongFileName = new JavaCompiler("TestFailure", directoryPath);
+	public void compilerCompileTestFailure() {
+		Compiler compilerWrongFileName = new JavaCompiler("TestFailure", directoryPath, osCommand);
 
-		Assertions.assertThrows(CompileFailedException.class, () -> compilerWrongFileName.compile());
+		Assertions.assertThrows(IllegalStateException.class, () -> compilerWrongFileName.compile());
 
-		Compiler compilerWrongPath = new JavaCompiler("Test", directoryPath + "\\wrongPath");
+		Compiler compilerWrongPath = new JavaCompiler("Test", directoryPath + "\\wrongPath", osCommand);
 
-		Assertions.assertThrows(CompileFailedException.class, () -> compilerWrongPath.compile());
+		Assertions.assertThrows(IllegalStateException.class, () -> compilerWrongPath.compile());
 	}
 
 }

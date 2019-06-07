@@ -3,7 +3,9 @@ package com.shouwn.oj.run;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.shouwn.oj.exception.process.processMachine.RunFailedException;
+import com.shouwn.oj.command.OSCommand;
+import com.shouwn.oj.command.WindowCommand;
+import com.shouwn.oj.exception.IllegalStateException;
 import com.shouwn.oj.model.entity.member.Admin;
 import com.shouwn.oj.model.entity.problem.Course;
 import com.shouwn.oj.model.entity.problem.Problem;
@@ -12,15 +14,9 @@ import com.shouwn.oj.model.entity.problem.TestCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.shouwn.oj.model.enums.ProblemType.HOMEWORK;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
 public class JavaRunnerTest {
 
 	private Admin professor;
@@ -30,6 +26,8 @@ public class JavaRunnerTest {
 	private TestCase testCase;
 	private List<TestCase> testCases;
 	private String directoryPath;
+
+	private OSCommand osCommand;
 
 	@BeforeEach
 	void init() {
@@ -70,16 +68,18 @@ public class JavaRunnerTest {
 		testCases.add(testCase);
 
 		this.directoryPath = "C:\\test";
+
+		this.osCommand = new WindowCommand();
 	}
 
 	@Test
 	public void runnerCommandTest() {
-		Runner runnerWithPackageName = new JavaRunner("test.", "Test", "T:\\test");
-		Runner runnerWithoutPackageName = new JavaRunner("", "Test", "T:\\test");
+		Runner runnerWithPackageName = new JavaRunner("test.", "Test", "T:\\test", this.osCommand);
+		Runner runnerWithoutPackageName = new JavaRunner("", "Test", "T:\\test", this.osCommand);
 
 		StringBuilder sb = new StringBuilder();
 
-		for (String s : runnerWithPackageName.getCommand()) {
+		for (String s : runnerWithPackageName.getCommands()) {
 			sb.append(s);
 			sb.append(" ");
 		}
@@ -88,7 +88,7 @@ public class JavaRunnerTest {
 
 		sb = new StringBuilder();
 
-		for (String s : runnerWithoutPackageName.getCommand()) {
+		for (String s : runnerWithoutPackageName.getCommands()) {
 			sb.append(s);
 			sb.append(" ");
 		}
@@ -98,7 +98,7 @@ public class JavaRunnerTest {
 
 	@Test
 	public void runnerRunSuccess() {
-		Runner runner = new JavaRunner("", "Test", directoryPath);
+		Runner runner = new JavaRunner("", "Test", directoryPath, this.osCommand);
 
 		List<String> results = runner.run(testCases);
 
@@ -107,18 +107,18 @@ public class JavaRunnerTest {
 
 	@Test
 	public void runnerRunFailure() {
-		Runner runnerWrongFileName = new JavaRunner("", "TestFailure", directoryPath);
+		Runner runnerWrongFileName = new JavaRunner("", "TestFailure", directoryPath, this.osCommand);
 
-		Assertions.assertThrows(RunFailedException.class, () -> runnerWrongFileName.run(testCases));
+		Assertions.assertThrows(IllegalStateException.class, () -> runnerWrongFileName.run(testCases));
 
-		Runner runnerWrongPath = new JavaRunner("", "Test", directoryPath + "\\wrongPath");
+		Runner runnerWrongPath = new JavaRunner("", "Test", directoryPath + "\\wrongPath", this.osCommand);
 
-		Assertions.assertThrows(RunFailedException.class, () -> runnerWrongPath.run(testCases));
+		Assertions.assertThrows(IllegalStateException.class, () -> runnerWrongPath.run(testCases));
 	}
 
 	@Test
 	public void runnerRunExceptionResult() {
-		Runner runner = new JavaRunner("", "Test", directoryPath);
+		Runner runner = new JavaRunner("", "Test", directoryPath, this.osCommand);
 		testCase.setParams("s");
 
 		List<String> results = runner.run(testCases);

@@ -14,14 +14,9 @@ import com.shouwn.oj.model.request.process.ProcessRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.shouwn.oj.model.enums.ProblemType.HOMEWORK;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
 public class ProcessMachineFactoryTest {
 
 	private Admin professor;
@@ -75,11 +70,10 @@ public class ProcessMachineFactoryTest {
 		ProcessRequest processRequest = ProcessRequest.builder()
 				.sourceCode("public class Main{}")
 				.language("java")
-				.pk(1)
-				.testCases(testCases)
+				.problemDetailId(1)
 				.build();
 
-		ProcessMachine processMachine = new ProcessMachineFactory(processRequest).getProcessMachine();
+		ProcessMachine processMachine = ProcessMachineFactory.createProcessMachine(processRequest, this.testCases);
 
 		Assertions.assertEquals(true, processMachine instanceof JavaProcessMachine);
 	}
@@ -89,11 +83,10 @@ public class ProcessMachineFactoryTest {
 		ProcessRequest processRequest = ProcessRequest.builder()
 				.sourceCode("public class Main{}")
 				.language("jaa")
-				.pk(1)
-				.testCases(testCases)
+				.problemDetailId(1)
 				.build();
 
-		ProcessMachine processMachine = new ProcessMachineFactory(processRequest).getProcessMachine();
+		ProcessMachine processMachine = ProcessMachineFactory.createProcessMachine(processRequest, this.testCases);
 
 		Assertions.assertEquals(null, processMachine);
 	}

@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.shouwn.oj.exception.IllegalStateException;
 import com.shouwn.oj.model.entity.problem.TestCase;
 import com.shouwn.oj.util.StringUtils;
 import lombok.Getter;
