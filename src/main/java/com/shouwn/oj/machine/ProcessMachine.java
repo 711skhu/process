@@ -21,7 +21,7 @@ public abstract class ProcessMachine {
 	public ProcessMachine(ProcessRequest processRequest) {
 		this.sourceCode = processRequest.getSourceCode();
 		this.testCases = processRequest.getTestCases();
-		this.pk = processRequest.getPk();
+		this.pk = processRequest.getProblemDetailId();
 	}
 
 	public List<String> run() throws OJException {

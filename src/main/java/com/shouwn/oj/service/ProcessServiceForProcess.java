@@ -20,7 +20,7 @@ public class ProcessServiceForProcess {
 
 	public int getSolutionResult(ProcessRequest processRequest) {
 		List<String> result = ProcessMachineFactory.createProcessMachine(processRequest).run();
-		return getCountOfMatchResult(processRequest.getPk(), result);
+		return getCountOfMatchResult(processRequest.getProblemDetailId(), result);
 	}
 
 	private int getCountOfMatchResult(long problemDetailId, List<String> result) {
