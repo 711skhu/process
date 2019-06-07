@@ -1,7 +1,9 @@
 package com.shouwn.oj.sourceFile;
 
+import com.shouwn.oj.command.OSCommand;
+
 public class JavaSourceFile extends SourceFile {
-	public JavaSourceFile(long pk, String sourceCode) {
-		super(pk, sourceCode, ".java");
+	public JavaSourceFile(long problemDetailId, String sourceCode, OSCommand osCommand) {
+		super(problemDetailId, sourceCode, ".java", osCommand);
 	}
 }

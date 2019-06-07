@@ -13,6 +13,8 @@ public class StringUtils {
 			sb.append(line);
 		}
 
+		bufferedReader.close();
+
 		String string = sb.toString();
 
 		return string.length() == 0 ? null : string;

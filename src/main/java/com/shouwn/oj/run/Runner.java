@@ -11,18 +11,18 @@ import lombok.Getter;
 @Getter
 public abstract class Runner {
 
-	private String[] command;
+	private List<String> commands;
 	private String directoryPath;
 
-	public Runner(String[] command, String directoryPath) {
-		this.command = command;
+	public Runner(List<String> commands, String directoryPath) {
+		this.commands = commands;
 		this.directoryPath = directoryPath;
 	}
 
 	public List<String> run(List<TestCase> testCases) {
 		List<String> results = new ArrayList<>();
 
-		ProcessBuilder processBuilder = new ProcessBuilder(command);
+		ProcessBuilder processBuilder = new ProcessBuilder(commands);
 		processBuilder.directory(new File(directoryPath));
 
 		try {
@@ -41,6 +41,7 @@ public abstract class Runner {
 
 				String result = StringUtils.inputStreamToString(stdOut);
 				String error = StringUtils.inputStreamToString(stdErr);
+
 				if(result == null) {
 					if(error.contains("오류")) {
 						throw new IllegalStateException("파일 실행중 오류가 발생했습니다.");

@@ -1,13 +1,17 @@
 package com.shouwn.oj.sourceFile;
 
 import java.io.*;
+import java.util.List;
+
+import com.shouwn.oj.command.OSCommand;
 import com.shouwn.oj.factory.ProcessFactory;
 import com.shouwn.oj.util.FileNameUtils;
 import lombok.Getter;
 
 @Getter
 public abstract class SourceFile {
-	private long pk;
+
+	private long problemDetailId;
 	private String packageName;
 	private String className;
 	private String directoryPath;
@@ -15,21 +19,25 @@ public abstract class SourceFile {
 	private String sourceFileExtension;
 	private String defaultDirectoryPath = "C:\\Users\\yeji\\Desktop\\711SKHUTESTFOLDER\\"; //현재 cmd에서 테스트를 위한 경로. 삭제 예정.
 
-	public SourceFile(long pk, String sourceCode, String sourceFileExtension) {
-		this.pk = pk;
+	private OSCommand osCommand;
+
+	public SourceFile(long problemDetailId, String sourceCode, String sourceFileExtension, OSCommand osCommand) {
+		this.problemDetailId = problemDetailId;
 		this.sourceCode = sourceCode.trim();
 		this.packageName = FileNameUtils.getSourceFilePackageName(sourceCode);
 		this.className = FileNameUtils.getSourceFileClassName(sourceCode);
 		this.directoryPath = createDirectoryPath();
 		this.sourceFileExtension = sourceFileExtension;
+		this.osCommand = osCommand;
 	}
 
 	public String createDirectoryPath() {
-		String directoryPath = defaultDirectoryPath + pk;
-		String[] command = {"cmd.exe", "/c", "md " + pk};
+		String directoryPath = defaultDirectoryPath + problemDetailId;
+		String command = osCommand.createDirectoryPathCommand();
+		List<String> commands = osCommand.createCommandList(command, String.valueOf(this.problemDetailId));
 
 		try {
-			Process process = ProcessFactory.processRun(command, defaultDirectoryPath);
+			Process process = ProcessFactory.processRun(commands, defaultDirectoryPath);
 			BufferedReader bufferedReaderError = new BufferedReader(new InputStreamReader(process.getErrorStream(), "EUC-KR"));
 			String errorMessage = bufferedReaderError.readLine();
 
@@ -53,12 +61,11 @@ public abstract class SourceFile {
 	}
 
 	public void deleteFolder() {
-		String[] command = {"cmd.exe", "/c", "rd /s/q " + pk};
-		ProcessBuilder processBuilder = new ProcessBuilder(command);
-		processBuilder.directory(new File(defaultDirectoryPath));
+		String command = osCommand.deleteFolderCommand();
+		List<String> commands = osCommand.createCommandList(command, String.valueOf(this.problemDetailId));
 
 		try {
-			Process process = ProcessFactory.processRun(command, defaultDirectoryPath);
+			Process process = ProcessFactory.processRun(commands, defaultDirectoryPath);
 			BufferedReader bufferedReaderError = new BufferedReader(new InputStreamReader(process.getErrorStream(), "EUC-KR"));
 			String errorMessage = bufferedReaderError.readLine();
 
